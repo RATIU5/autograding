@@ -228,7 +228,11 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
       failed = true
       log('')
       log(color.red(`❌ ${test.name}`))
-      core.setFailed(error.message)
+      if (error instanceof TestError) {
+        core.setFailed(error.message)
+      } else {
+        core.setFailed(`Failed to run test '${test.name}'`)
+      }
     }
   }
 
@@ -237,12 +241,16 @@ export const runAll = async (tests: Array<Test>, cwd: string): Promise<void> => 
   log(`::${token}::`)
 
   if (failed) {
-    // We need a good failure experience
+    log('')
+    log(color.red('Not all tests passed'))
+    log('')
+    log('❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌')
+    log('')
   } else {
     log('')
     log(color.green('All tests passed'))
     log('')
-    log('✨🌟💖💎🦄💎💖🌟✨🌟💖💎🦄💎💖🌟✨')
+    log('✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅')
     log('')
   }
 
